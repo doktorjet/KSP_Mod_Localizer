@@ -11,6 +11,6 @@ Also it will NOT localize ModuleManager patches - you should do it manually.
 # How to use:
 Open this script in Python editor, 
 than change pdir value for where your mod is,
-than run ther script.
+than run the script.
 
 That's all.
