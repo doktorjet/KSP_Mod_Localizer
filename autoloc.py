@@ -1,4 +1,4 @@
-# KSP AutoLoc 0.1
+# KSP AutoLoc 0.2
 #
 # This script is meant to replace boring manual text replacement tasks
 # for implementing localization to non-localized-yet part mods in KSP 1.3+
@@ -8,19 +8,21 @@
 # 1) Any .cfg files with MORE THAN ONE PART in them.
 # 2) More than one single agency in /Agencies/Agents.cfg
 #
-# Also it will NOT localize ModuleManager patches - you should do it manually.
+# Also it will NOT localize ModuleManager patches, GUI commands or science definitions - you should do them manually.
 
-
-# Open this script in Python editor,
-# than change pdir value for where your mod is,
-# than run ther script.
-
-pdir = 'c:\Games\KSPx64_dev\GameData\CONTARES'
-
+import sys
 import os
 agency = False
-print('***  KSP Automatic Localizer 0.1 ***')
 
+# Fail function
+def kaput(p):
+    print p
+    try:
+        input("Press enter to continue")
+    except SyntaxError:
+        pass
+    sys.exit(0)
+        
 # Line replacer function
 def ReplaceLineInFile(fileName, sourceText, replaceText):
     file = open(fileName, 'r')
@@ -60,6 +62,17 @@ def cfgread(ff):
                 cr[5]=line
     return(cr)
 
+print('***  KSP Automatic Localizer 0.2 ***')	
+	
+# Aquiring mod folder from command line parameter
+if len(sys.argv)>1:
+    pdir = sys.argv[1]
+else:
+    kaput('You are supposed to supply a path to mod folder as a command line parameter.')
+
+if not os.path.isdir(pdir):
+    kaput('Your input is: '+pdir+'.\nIt is vot a valid folder.\nYou are supposed to supply a path to mod folder as a command line parameter.')
+ 
 # Reading mod name (equals to folder name)
 modname = pdir.rpartition("\\")[2]
 print ('Processing the '+modname+' mod...')
@@ -75,8 +88,8 @@ if not os.path.isdir(pdir+'\Localization'):
 # Check if basic en-us localization is there already.
 # Repetitive execution while having that file will definitely ruin the strings, so we'll stop instead.
 if os.path.isfile(pdir+'\Localization\en-us.cfg'):
-    print('Localization file already exists! Stopping execution to prevent string damage!')
-    quit()
+    kaput('Localization file already exists! Stopping execution to prevent string damage!')
+
 else:
     print('Localization file not found. Creating it!')
 floc = open(pdir+'\Localization\en-us.cfg','w+')
@@ -116,4 +129,4 @@ for path, dirs, files in os.walk(pdir):
 # Close en-us.cfg, we're done with it.
 floc.write('}\n}')
 floc.close()
-print('Done.\n')
+kaput('We are done here! Check your mod!')
