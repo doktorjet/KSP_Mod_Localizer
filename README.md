@@ -1,4 +1,4 @@
-#KSP AutoLoc 0.1
+# KSP AutoLoc 0.1
 
 This script is meant to replace boring manual text replacement tasks for implementing localization to non-localized-yet part mods in KSP 1.3+
 Beware, it does not use KSP API for clean node processing, so it may produce errors.
