@@ -14,3 +14,5 @@ than change pdir value for where your mod is,
 than run the script.
 
 That's all.
+
+P.S. Don't blame me for ugly code, it's my first effort in programming after 15 years pause.
