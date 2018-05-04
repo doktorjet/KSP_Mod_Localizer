@@ -98,12 +98,12 @@ floc.write("Localization\n{\nen-us\n{\n")
 # Check if we have an agency. If we do, we'll treat it as the only one!
 # And will also use it's title for all parts 'manufacturer' property.
 
-if os.path.isfile(pdir+'\Agencies\Agents.cfg'):
+if filecheck(pdir+'\Agencies\Agents.cfg','AGENT'):
     floc.write('// Agencies\n\n')
     cfg = cfgread(pdir+'\Agencies\Agents.cfg')
     agency = True
     if not cfg[1]:
-        print ('Found an agency, but it does not have a title, which is a severe bug. Fixing by assigning a title equal to it\'s name^: '+ cfg[0])
+        print ('Found an agency, but it does not have a title, which is a severe bug. Fixing by assigning a title equal to it\'s name: '+ cfg[0])
         cfg[1] = cfg[0]
         ReplaceLineInFile(pdir+'\Agencies\Agents.cfg',cfg[4],'title = #LOC_'+modname+'_Agency_title\ndescription = #LOC_'+modname+'_Agency_desc\n')
     else:
