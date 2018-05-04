@@ -73,7 +73,7 @@ else:
 if not os.path.isdir(pdir):
     kaput('Your input is: '+pdir+'.\nIt is vot a valid folder.\nYou are supposed to supply a path to mod folder as a command line parameter.')
  
-# Reading mod name (equals to folder name)
+# Reading mod name (equals to folder name as in CKAN)
 modname = pdir.rpartition("\\")[2]
 print ('Processing the '+modname+' mod...')
 l = len(pdir)+1
@@ -91,7 +91,7 @@ if os.path.isfile(pdir+'\Localization\en-us.cfg'):
     kaput('Localization file already exists! Stopping execution to prevent string damage!')
 
 else:
-    print('Localization file not found. Creating it!')
+    print('Localization file not found. Creating!')
 floc = open(pdir+'\Localization\en-us.cfg','w+')
 floc.write("Localization\n{\nen-us\n{\n")
 
@@ -102,11 +102,16 @@ if os.path.isfile(pdir+'\Agencies\Agents.cfg'):
     floc.write('// Agencies\n\n')
     cfg = cfgread(pdir+'\Agencies\Agents.cfg')
     agency = True
-    print ('Found an agency, named '+cfg[1]+'. Using it as the one and only part manufacturer.')
+    if not cfg[1]:
+        print ('Found an agency, but it does not have a title, which is a severe bug. Fixing by assigning a title equal to it\'s name^: '+ cfg[0])
+        cfg[1] = cfg[0]
+        ReplaceLineInFile(pdir+'\Agencies\Agents.cfg',cfg[4],'title = #LOC_'+modname+'_Agency_title\ndescription = #LOC_'+modname+'_Agency_desc\n')
+    else:
+        print ('Found an agency, named '+cfg[1]+'. Using it as the one and only part manufacturer.')
+        ReplaceLineInFile(pdir+'\Agencies\Agents.cfg',cfg[3],'title = #LOC_'+modname+'_Agency_title\n')
+        ReplaceLineInFile(pdir+'\Agencies\Agents.cfg',cfg[4],'description = #LOC_'+modname+'_Agency_desc\n')
     floc.write('#LOC_'+modname+'_Agency_title = '+cfg[1]+'\n')
     floc.write('#LOC_'+modname+'_Agency_desc = '+cfg[2]+'\n')
-    ReplaceLineInFile(pdir+'\Agencies\Agents.cfg',cfg[3],'title = #LOC_'+modname+'_Agency_title\n')
-    ReplaceLineInFile(pdir+'\Agencies\Agents.cfg',cfg[4],'title = #LOC_'+modname+'_Agency_desc\n')
 
 
 # Dir walk and parts writing.
@@ -121,7 +126,7 @@ for path, dirs, files in os.walk(pdir):
                    floc.write('\n// '+pstring+'\n\n')
                cfg = cfgread(path+'\\'+fname)
                floc.write('#LOC_'+modname+'_'+cfg[0]+'_title = '+cfg[1]+'\n')
-               floc.write('#LOC_'+modname+'_'+cfg[0]+'_desc = '+cfg[2]+'\n')
+               floc.write('#LOC_'+modname+'_'+cfg[0]+'_desc = '+cfg[2]+'\n\n')
                ReplaceLineInFile(path+'\\'+fname,cfg[3],'title\t\t\t= #LOC_'+modname+'_'+cfg[0]+'_title\n')
                ReplaceLineInFile(path+'\\'+fname,cfg[4],'description\t\t= #LOC_'+modname+'_'+cfg[0]+'_desc\n')
                if agency:
@@ -129,4 +134,4 @@ for path, dirs, files in os.walk(pdir):
 # Close en-us.cfg, we're done with it.
 floc.write('}\n}')
 floc.close()
-kaput('We are done here! Check your mod!')
+kaput('We are done here! Check your newly localized mod for bugs!')
