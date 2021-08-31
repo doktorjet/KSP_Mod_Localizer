@@ -10,14 +10,20 @@
 #
 # Also it will NOT localize ModuleManager patches, GUI commands or science definitions - you should do them manually.
 
+# v0.3.1
+# print p -> print(p) 
+# line 24
+# raw_input() -> input() 
+# line 88
+
 import sys
 import os
 agency = False
-ver = '0.3'
+ver = '0.3.1'
 
 # Fail function
 def kaput(p):
-    print p
+    print(p)
     try:
         input("Press enter to continue")
     except SyntaxError:
@@ -81,7 +87,7 @@ def question(q, default=True):
         prompt = " [Y/n] "
     
     while True:
-        choice = raw_input(q + prompt).lower()
+        choice = input(q + prompt).lower()
         if default != None and choice == '':
             return default
         elif choice in valid:
